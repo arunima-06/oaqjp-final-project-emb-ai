@@ -1,35 +1,35 @@
 
+"""Flask application for emotion detection."""
+
 from flask import Flask, render_template, request
 from EmotionDetection import emotion_detector
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    """Render the application home page."""
+    return render_template("index.html")
 
 
-@app.route('/emotionDetector')
+@app.route("/emotionDetector")
 def sent_analyzer():
-    text_to_analyze = request.args.get('textToAnalyze')
-
-    if not text_to_analyze:
-        return "Please enter a statement to analyze."
-
+    """Analyze text and return its emotion scores."""
+    text_to_analyze = request.args.get("textToAnalyze", "")
     response = emotion_detector(text_to_analyze)
 
-    if response['dominant_emotion'] is None:
-        return "Invalid text! Please try again."
+    if response["dominant_emotion"] is None:
+        return "Invalid text! Please try again!"
 
-    anger = response['anger']
-    disgust = response['disgust']
-    fear = response['fear']
-    joy = response['joy']
-    sadness = response['sadness']
-    dominant_emotion = response['dominant_emotion']
+    anger = response["anger"]
+    disgust = response["disgust"]
+    fear = response["fear"]
+    joy = response["joy"]
+    sadness = response["sadness"]
+    dominant_emotion = response["dominant_emotion"]
 
-    result = (
+    return (
         f"For the given statement, the system response is "
         f"'anger': {anger}, 'disgust': {disgust}, "
         f"'fear': {fear}, 'joy': {joy} and "
@@ -37,8 +37,6 @@ def sent_analyzer():
         f"The dominant emotion is {dominant_emotion}."
     )
 
-    return result
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
